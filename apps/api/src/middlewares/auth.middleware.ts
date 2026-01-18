@@ -11,7 +11,7 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
     }
 
     try {
-        const decoded = jwt.verify(token, env.JWT_SECRET) as { id: string, email: string };
+        const decoded = jwt.verify(token, env.JWT_SECRET) as { id: number, email: string };
         req.user = decoded;
         next();
     } catch (error) {
