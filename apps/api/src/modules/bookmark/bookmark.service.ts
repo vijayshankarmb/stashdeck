@@ -13,6 +13,9 @@ export const getBookmarksService = async (userId: number) => {
         orderBy: {
             createdAt: "desc" 
         },
+        include: {
+            tags: true
+        }
     });
 };
 
@@ -20,8 +23,10 @@ export const createBookmarkService = async (
     url: string,
     title: string,
     description: string | undefined,
-    userId: number
+    userId: number,
+    tags?: string[]
 ) => {
+    const safeTags = tags ?? [];
     try {
         return await prisma.bookmark.create({
             data: {
@@ -33,7 +38,24 @@ export const createBookmarkService = async (
                         id: userId
                     }
                 },
+                tags: {
+                    connectOrCreate: safeTags.map(tag => ({
+                        where: {
+                            name_userId: {
+                                name: tag.toLowerCase(),
+                                userId
+                            }
+                        },
+                        create: {
+                            name: tag.toLowerCase(),
+                            userId
+                        }
+                    }))
+                }
             },
+            include: {
+                tags: true
+            }
         });
     } catch (err) {
         const e = err as PrismaErrorLike;

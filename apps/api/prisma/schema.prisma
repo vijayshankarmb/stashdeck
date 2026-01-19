@@ -16,6 +16,8 @@ model User {
   updatedAt DateTime  @updatedAt
 
   Bookmarks  Bookmark[]
+
+  tags       Tag[]
 }
 
 model Bookmark {
@@ -29,6 +31,20 @@ model Bookmark {
   userId        Int  
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade )
 
+  tags          Tag[]     @relation("BookmarkTags")
+
   @@unique([userId, url])
+}
+
+model Tag { 
+  id        Int        @id @default(autoincrement())
+  name      String  
+
+  userId    Int 
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bookmarks Bookmark[]  @relation("BookmarkTags")
+
+  @@unique([name, userId], name: "name_userId")
 }
 

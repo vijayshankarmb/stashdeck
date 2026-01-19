@@ -18,7 +18,7 @@ export const getBookmarks = async (req: Request, res: Response) => {
 
 export const createBookmark = async (req: Request, res: Response) => {
 
-    const { title, url, description } = req.body
+    const { title, url, description, tags } = req.body
 
     const user = req.user
 
@@ -26,7 +26,7 @@ export const createBookmark = async (req: Request, res: Response) => {
         return failure(res, "Not authorized to access this route", 401);
     }
 
-    const bookmark = await createBookmarkService(url, title, description, user.id)
+    const bookmark = await createBookmarkService(url, title, description, user.id, tags ?? [])
 
     return success(res,{messge: "Bookmark created successfully", bookmark}, 201);
 }
