@@ -5,10 +5,39 @@ type PrismaErrorLike = {
     code?: string;
 };
 
-export const getBookmarksService = async (userId: number, tags?: string[]) => {
+export const getBookmarksService = async (
+    userId: number,
+    tags?: string[],
+    page: number = 1,
+    limit: number = 10,
+    q?: string
+) => {
     return prisma.bookmark.findMany({
         where: {
             userId,
+            ...(
+                q ? {
+                    OR: [
+                        {
+                            title: {
+                                contains: q,
+                                mode: "insensitive"
+                            }
+                        },
+                        {
+                            url: {
+                                contains: q,
+                                mode: "insensitive"
+                            }
+                        },
+                        {
+                            description: {
+                                contains: q,
+                                mode: "insensitive"
+                            }
+                        }]
+                } : {}
+            ),
             ...(tags && tags.length > 0
                 ? {
                     tags: {
@@ -24,6 +53,8 @@ export const getBookmarksService = async (userId: number, tags?: string[]) => {
         orderBy: {
             createdAt: "desc"
         },
+        skip: (page - 1) * limit,
+        take: limit,
         include: {
             tags: true
         }

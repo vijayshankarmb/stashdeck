@@ -20,7 +20,12 @@ export const getBookmarks = async (req: Request, res: Response) => {
         tags = rawTag.filter((t): t is string => typeof t === "string");
     }
 
-    const bookmarks = await getBookmarksService(user.id, tags)
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+
+    const q = typeof req.query.q === "string" ? req.query.q : undefined
+
+    const bookmarks = await getBookmarksService(user.id, tags, page, limit, q)
 
     return success(res, { message: "Bookmarks fetched successfully", bookmarks }, 200);
 
