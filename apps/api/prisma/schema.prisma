@@ -34,6 +34,12 @@ model Bookmark {
   tags          Tag[]     @relation("BookmarkTags")
 
   @@unique([userId, url])
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@index([title])
+  @@index([url])
+  @@index([description])
 }
 
 model Tag { 
@@ -46,5 +52,8 @@ model Tag {
   bookmarks Bookmark[]  @relation("BookmarkTags")
 
   @@unique([name, userId], name: "name_userId")
+
+  @@index([name])
+  @@index([userId])
 }
 
