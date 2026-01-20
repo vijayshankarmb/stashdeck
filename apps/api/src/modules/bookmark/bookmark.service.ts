@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { createError } from "../../http/error";
+import { redis } from "../../lib/redis";
 
 type PrismaErrorLike = {
     code?: string;
@@ -12,7 +13,16 @@ export const getBookmarksService = async (
     limit: number = 10,
     q?: string
 ) => {
-    return prisma.bookmark.findMany({
+
+    const cacheKey = `bookmarks:${userId}:page-${page}:limit-${limit}:tags-${tags?.join(",") || 'none'}:q-${q || 'none'}`;
+
+    const cacheData = await redis.get(cacheKey);
+
+    if (cacheData){
+        return JSON.parse(cacheData);
+    }
+
+    const bookmarks = await prisma.bookmark.findMany({
         where: {
             userId,
             ...(
@@ -59,7 +69,12 @@ export const getBookmarksService = async (
             tags: true
         }
     });
-};
+
+    await redis.setex(cacheKey, 60, JSON.stringify(bookmarks));
+
+    return bookmarks;
+
+}
 
 export const createBookmarkService = async (
     url: string,
@@ -70,7 +85,7 @@ export const createBookmarkService = async (
 ) => {
     const safeTags = tags ?? [];
     try {
-        return await prisma.bookmark.create({
+        const bookmark = await prisma.bookmark.create({
             data: {
                 url,
                 title,
@@ -99,6 +114,8 @@ export const createBookmarkService = async (
                 tags: true
             }
         });
+        await invalidateUserCache(userId)
+        return bookmark;
     } catch (err) {
         const e = err as PrismaErrorLike;
 
@@ -122,12 +139,14 @@ export const deleteBookmarkService = async (bookmarkId: number, userId: number) 
         throw createError("Bookmark not found", 404);
     }
 
-    return prisma.bookmark.deleteMany({
+    await prisma.bookmark.deleteMany({
         where: {
             id: bookmarkId,
             userId
         }
     })
+
+    await invalidateUserCache(userId)
 }
 
 export const updateBookmarkService = async (
@@ -150,7 +169,7 @@ export const updateBookmarkService = async (
         throw createError("Bookmark not found", 404);
     }
 
-    return prisma.bookmark.update({
+    const updatedBookmark = await prisma.bookmark.update({
         where: {
             id: bookmarkId,
         },
@@ -177,6 +196,17 @@ export const updateBookmarkService = async (
             tags: true
         }
     })
+
+    await invalidateUserCache(userId);
+
+    return updatedBookmark;
 }
 
+export const invalidateUserCache = async (userId: number) => {
+    const keys = await redis.keys(`bookmarks:${userId}:*`);
+
+    if (keys.length > 0) {
+        await redis.del(keys);
+    }
+}
 
