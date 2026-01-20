@@ -2,7 +2,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>om ganganapathe namaha. radhe radhe, jai sri ram</div>
+    <div className='text-red-500'>om ganganapathe namaha. radhe radhe, jai sri ram</div>
   )
 }
 

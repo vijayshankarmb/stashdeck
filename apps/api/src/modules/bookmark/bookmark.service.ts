@@ -16,9 +16,14 @@ export const getBookmarksService = async (
 
     const cacheKey = `bookmarks:${userId}:page-${page}:limit-${limit}:tags-${tags?.join(",") || 'none'}:q-${q || 'none'}`;
 
-    const cacheData = await redis.get(cacheKey);
+    let cacheData: string | null = null;
+    try {
+        cacheData = await redis.get(cacheKey);
+    } catch (e) {
+        console.warn("Redis is down (read), falling back to DB");
+    }
 
-    if (cacheData){
+    if (cacheData) {
         return JSON.parse(cacheData);
     }
 
@@ -70,7 +75,11 @@ export const getBookmarksService = async (
         }
     });
 
-    await redis.setex(cacheKey, 60, JSON.stringify(bookmarks));
+    try {
+        await redis.setex(cacheKey, 60, JSON.stringify(bookmarks));
+    } catch (e) {
+        console.warn("Redis is down (write), skipping cache");
+    }
 
     return bookmarks;
 
@@ -114,7 +123,11 @@ export const createBookmarkService = async (
                 tags: true
             }
         });
-        await invalidateUserCache(userId)
+        try {
+            await invalidateUserCache(userId)
+        } catch (error) {
+            console.warn("Redis is down (invalidate), skipping cache clear");
+        }
         return bookmark;
     } catch (err) {
         const e = err as PrismaErrorLike;
@@ -146,7 +159,11 @@ export const deleteBookmarkService = async (bookmarkId: number, userId: number) 
         }
     })
 
-    await invalidateUserCache(userId)
+    try {
+        await invalidateUserCache(userId)
+    } catch (error) {
+        console.warn("Redis is down (invalidate), skipping cache clear");
+    }
 }
 
 export const updateBookmarkService = async (
@@ -197,7 +214,11 @@ export const updateBookmarkService = async (
         }
     })
 
-    await invalidateUserCache(userId);
+    try {
+        await invalidateUserCache(userId);
+    } catch (error) {
+        console.warn("Redis is down (invalidate), skipping cache clear");
+    }
 
     return updatedBookmark;
 }
