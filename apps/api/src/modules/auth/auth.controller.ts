@@ -27,7 +27,7 @@ export const signUp = async (req: Request, res: Response) => {
         }
     })
 
-    return success(res,{messge: "User created successfully", user: {
+    return success(res,{message: "User created successfully", user: {
         id: user.id,
         email: user.email
     }}, 201);
@@ -70,7 +70,7 @@ export const signIn = async (req: Request, res: Response) => {
         sameSite: "lax"
     })
 
-    return success(res,{messge: "User signed in successfully", user: {
+    return success(res,{message: "User signed in successfully", user: {
         id: user.id,
         email: user.email
     }}, 200);
@@ -78,11 +78,11 @@ export const signIn = async (req: Request, res: Response) => {
 
 export const signOut = async (req: Request, res: Response) => {
     res.clearCookie("token");
-    return success(res,{messge: "User signed out successfully"}, 200);
+    return success(res,{message: "User signed out successfully"}, 200);
 }
 
 export const getMe = async (req: Request, res: Response) => {
     const user = req.user
 
-    return success(res,{messge: "User fetched successfully", user}, 200);
+    return success(res,{message: "User fetched successfully", user}, 200);
 }
