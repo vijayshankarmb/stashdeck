@@ -1,14 +1,16 @@
 'use client'
 
 import React from 'react'
-import useAuth from '@/lib/useAuth'
+import Navbar from '@/components/common/Navbar'
+import Hero from '@/components/landing/Hero'
+import Intro from '@/components/landing/Intro'
 
 const Home = () => {
-  const { user, loading } = useAuth()
   return (
     <div>
-      <h1>Home</h1>
-      <p>{loading ? 'Loading...' : user ? `Logged in as ${user.email}` : 'Not logged in'}</p>
+        <Navbar />
+        <Hero />
+        <Intro />
     </div>
   )
 }

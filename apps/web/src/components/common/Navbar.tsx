@@ -15,30 +15,35 @@ const Navbar = () => {
             href: "/features"
         },
         {
+            label: "Pricing",
+            href: "/pricing"
+        },
+        {
             label: "About",
             href: "/about"
         }
     ]
 
     return (
-        <nav>
+        <nav className='py-2 border-b '>
             <Container>
                 <div className='flex justify-between items-center'>
-                    <div>
+                    <h3 className='font-bold text-2xl'>
                         StashDeck
-                    </div>
+                    </h3>
                     <div className='flex gap-4 items-center'>
                         {
                             NavItems.map((item, idx) => (
-                                <Link key={idx} href={item.href}>
+                                <Link key={idx} href={item.href} className='hidden sm:block'>
                                     {item.label}
                                 </Link>
                             ))
                         }
                     </div>
                     <div className='flex items-center gap-4'>
-                        <Button size="sm" variant="ghost">Signin</Button>
-                        <Button size="sm" variant="default">Signup</Button>
+                        <Link href="/dashboard">
+                            <Button size="sm" variant="outline">Open App</Button>
+                        </Link>
                     </div>
                 </div>
             </Container>
