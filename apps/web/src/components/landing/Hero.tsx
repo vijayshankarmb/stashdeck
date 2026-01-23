@@ -17,7 +17,7 @@ const Hero = () => {
                             Intuitive. Powerful. Runs everywhere
                         </p>
                         <Link href="/dashboard">
-                            <Button size="sm" variant="default" className='bg-blue-500'>Open app</Button>
+                            <Button size="sm" variant="default" className='bg-blue-500 hover:bg-blue-600'>Open app</Button>
                         </Link>
                     </div>
 

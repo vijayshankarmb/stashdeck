@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import useAuth from '@/lib/useAuth'
 import { useRouter } from 'next/navigation'
+import { Loader2 } from 'lucide-react'
 
 const SigninPage = () => {
 
@@ -25,16 +26,19 @@ const SigninPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setError('')
+        setLoading(true)
         try {
             await signin(email, password)
             router.push('/')
         } catch (error: any) {
             setError(error.message || "Invalid email or password" )
         }
+        setLoading(false)
     }
 
     return (
@@ -62,6 +66,7 @@ const SigninPage = () => {
                             placeholder='me@example.com'
                             value={email}
                             onChange={(e)=>setEmail(e.target.value)}
+                            disabled={loading}
                             />
                         </div>
                         <div className='grid gap-2'>
@@ -72,13 +77,14 @@ const SigninPage = () => {
                             placeholder='password'
                             value={password}
                             onChange={(e)=>setPassword(e.target.value)}
+                            disabled={loading}
                             />
                         </div>
                         <Button 
                         size="sm"
                         variant='default'
                         type='submit'
-                        >Sign In</Button>
+                        > {loading ? <><Loader2 className='inline animate-spin' /> Signin</> : 'Signin'} </Button>
                     </form>
                 </CardContent>
 

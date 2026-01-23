@@ -25,7 +25,7 @@ const Navbar = () => {
     ]
 
     return (
-        <nav className='py-2 border-b '>
+        <nav className='py-2 border-b border-border'>
             <Container>
                 <div className='flex justify-between items-center'>
                     <h3 className='font-bold text-2xl'>
