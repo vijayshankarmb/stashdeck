@@ -43,7 +43,7 @@ export const createBookmark = async (req: Request, res: Response) => {
 
     const bookmark = await createBookmarkService(url, title, description, user.id, tags ?? [])
 
-    return success(res, { messge: "Bookmark created successfully", bookmark }, 201);
+    return success(res, { message: "Bookmark created successfully", bookmark }, 201);
 }
 
 export const deleteBookmark = async (req: Request, res: Response) => {
@@ -57,7 +57,7 @@ export const deleteBookmark = async (req: Request, res: Response) => {
 
     await deleteBookmarkService(Number(id), user.id)
 
-    return success(res, { messge: "Bookmark deleted successfully" }, 200);
+    return success(res, { message: "Bookmark deleted successfully" }, 200);
 }
 
 export const updateBookmark = async (req: Request, res: Response) => {
@@ -74,5 +74,5 @@ export const updateBookmark = async (req: Request, res: Response) => {
 
     const bookmark = await updateBookmarkService(title, url, description, tags ?? [], Number(id), user.id)
 
-    return success(res, { messge: "Bookmark updated successfully", bookmark }, 200);
+    return success(res, { message: "Bookmark updated successfully", bookmark }, 200);
 }
