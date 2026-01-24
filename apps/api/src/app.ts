@@ -14,7 +14,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(cors({
-    origin: env.CLIENT_URL || 'http://localhost:3000',
+    origin: [ env.CLIENT_URL || 'http://localhost:3000',
+    "chrome-extension://jbleiffedkelfmbpkkmoejbkfabjacbm"],
     credentials: true
 }))
 

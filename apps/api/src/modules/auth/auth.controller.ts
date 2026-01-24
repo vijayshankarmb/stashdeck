@@ -66,8 +66,8 @@ export const signIn = async (req: Request, res: Response) => {
 
     res.cookie("token", token, {
         httpOnly: true,
-        secure: env.NODE_ENV === "production" ? true : false,
-        sameSite: "lax"
+        secure: env.NODE_ENV === "production" ? true : true,
+        sameSite: "none"
     })
 
     return success(res,{message: "User signed in successfully", user: {
