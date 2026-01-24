@@ -1,6 +1,6 @@
 import type { Response, Request } from "express";
 import { success, failure } from "../../http/response";
-import { getBookmarksService, createBookmarkService, deleteBookmarkService, updateBookmarkService } from "./bookmark.service";
+import { getBookmarksService, createBookmarkService, deleteBookmarkService, updateBookmarkService, getTagsService } from "./bookmark.service";
 
 export const getBookmarks = async (req: Request, res: Response) => {
 
@@ -75,4 +75,16 @@ export const updateBookmark = async (req: Request, res: Response) => {
     const bookmark = await updateBookmarkService(title, url, description, tags ?? [], Number(id), user.id)
 
     return success(res, { message: "Bookmark updated successfully", bookmark }, 200);
+}
+
+export const getTags = async (req: Request, res: Response) => {
+    const user = req.user
+
+    if (!user) {
+        return failure(res, "Not authorized to access this route", 401);
+    }
+
+    const tags = await getTagsService(user.id)
+
+    return success(res, { message: "Tags fetched successfully", tags }, 200);
 }

@@ -231,3 +231,20 @@ export const invalidateUserCache = async (userId: number) => {
     }
 }
 
+export const getTagsService = async (userId: number) => {
+    const tags = await prisma.tag.findMany({
+        where: {
+            userId
+        },
+        include: {
+            _count: {
+                select: {
+                    bookmarks: true
+                }
+            }
+        }
+    })
+
+    return tags;
+}
+

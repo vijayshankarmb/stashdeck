@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import BookmarkCard from '@/components/common/BookmarkCard'
+import { Search } from 'lucide-react'
 
 const page = () => {
     const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
@@ -46,11 +47,15 @@ const page = () => {
   return (
     <section className='min-h-screen w-full px-6'>
         <div className='p-6 flex justify-between border-b '>
+            <div className='flex gap-2 w-1/3'>
             <Input
             type='text'
             placeholder='Search'
-            className='w-1/3'
             />
+            <Button size='icon'>
+                <Search/>
+            </Button>
+            </div>
             <Button>
                 Add
             </Button>
