@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>BookmarkOS</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        width: 300px;
+        padding: 12px;
+      }
+      input, textarea {
+        width: 100%;
+        margin-top: 6px;
+      }
+      button {
+        margin-top: 10px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Save Bookmark</h3>
+
+    <label>URL</label>
+    <input id="url" disabled />
+
+    <label>Title</label>
+    <input id="title" />
+
+    <label>Description (optional)</label>
+    <textarea id="description"></textarea>
+
+    <label>Tags (comma separated)</label>
+    <input id="tags" />
+
+    <button id="save">Save</button>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

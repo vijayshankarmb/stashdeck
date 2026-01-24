@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Stashdeck",
+  "version": "0.1.0",
+  "description": "Save the current tab to BookmarkOS",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "storage"]
+}
