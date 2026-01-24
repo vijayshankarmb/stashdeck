@@ -13,21 +13,30 @@ interface Bookmark {
     tags?:Tag[]
 }
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import BookmarkCard from '@/components/common/BookmarkCard'
 import { Search } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 const page = () => {
-    const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
-    const [error, setError] = useState('')
+    const [bookmarks, setBookmarks] = React.useState<Bookmark[]>([])
+    const [error, setError] = React.useState('')
+
+    const searchParams = useSearchParams()
+
+    const tag = searchParams.get('tag')
 
     const base_url = process.env.NEXT_PUBLIC_BASE_URL
     const fetchBookmarks = async () => {
         setError('')
         try {
-            const response = await fetch(`${base_url}/bookmarks`, {
+            const url: string = tag
+            ? `${base_url}/bookmarks?tag=${tag}`
+            : `${base_url}/bookmarks`
+
+            const response = await fetch(url, {
                 credentials: 'include'
             })
             if(!response.ok) {
@@ -40,9 +49,9 @@ const page = () => {
         }
     }
 
-    useEffect(()=>{
+    React.useEffect(()=>{
         fetchBookmarks()
-    }, [])
+    }, [tag])
 
   return (
     <section className='min-h-screen w-full px-6'>
