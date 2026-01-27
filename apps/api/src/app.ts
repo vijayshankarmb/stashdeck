@@ -5,17 +5,21 @@ import healthRouter from './modules/health/health.route';
 import authRouter from './modules/auth/auth.route';
 import bookmarkRouter from './modules/bookmark/bookmark.route';
 import cors from 'cors';
+import helmet from 'helmet'; // Added for production security headers
 import { env } from './config';
 
 const app = express();
+
+// Security middleware
+app.use(helmet());
 
 app.use(cookieParser());
 
 app.use(express.json());
 
 app.use(cors({
-    origin: [ env.CLIENT_URL || 'http://localhost:3000',
-    "chrome-extension://jbleiffedkelfmbpkkmoejbkfabjacbm"],
+    origin: [env.CLIENT_URL || 'http://localhost:3000',
+        "chrome-extension://jbleiffedkelfmbpkkmoejbkfabjacbm"],
     credentials: true
 }))
 
